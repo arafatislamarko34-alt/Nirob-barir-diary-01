@@ -2,12 +2,51 @@
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
-  <title>Nirob Barir Diary - Diary of the Silent House</title>
-<meta name="description" content="Play Nirob Barir Diary, a chilling interactive horror story set in a mysterious house. Uncover the secrets of the silent diary. (Bilingual: Bengali & English)">
+  <title>Nirob barir diary-Diary of the Silent House</title>
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="description" content="Play Diary of the silent house - Nirob Barir Diary, a chilling interactive horror story set in a mysterious house. Uncover the secrets of the silent diary. (Bilingual: Bengali & English)">
 <meta name="keywords" content="Nirob Barir Diary, Silent House Diary, Horror Game Bangladesh, Interactive Story, Arafat Islam Arko">
 <meta name="author" content="Arafat Islam Arko">
 
   <style>
+  html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+}
+
+#gameWrapper {
+  width: 100vw;
+  height: 100vh;
+  max-width: 100%;
+  max-height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Actual game area */
+#gameContainer {
+  width: 800px;
+  height: 450px;
+  max-width: 100%;
+  max-height: 100%;
+  background: #000;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Mobile auto scale */
+@media (max-width: 800px) {
+  #gameContainer {
+    width: 100vw;
+    height: calc(100vw * 9 / 16);
+  }
+}
+  
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -78,6 +117,20 @@
 
 #menuBox p:hover {
   background: #222;
+}
+  .quiz-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.9);
+  color: #fff;
+  padding: 16px 24px;
+  border-radius: 12px;
+  font-size: 18px;
+  z-index: 9999;
+  display: none;
+  text-align: center;
 }
   </style>
 </head>
@@ -238,11 +291,10 @@
         btn.innerText = opt;
         btn.onclick = () => {
           if (i === scene.correct) {
-            alert("সঠিক উত্তর! (correct answer!)");
-            nextScene();
-          } else {
-            alert("ভুল উত্তর, আবার চেষ্টা করো (wrong answer,try again)");
-          }
+  showQuizMessage("Correct answer!(সঠিক উত্তর!)", true);
+} else {
+  showQuizMessage("Wrong answer, try again (ভুল উত্তর, আবার চেষ্টা করুন)", false);
+}
         };
         quizBox.appendChild(btn);
       });
@@ -254,6 +306,18 @@
       sceneText.innerText = scene.text;
     }
   }
+  function showQuizMessage(text, isCorrect) {
+  const box = document.getElementById("quizMessage");
+  box.innerText = text;
+  box.style.display = "block";
+
+  setTimeout(() => {
+    box.style.display = "none";
+    if (isCorrect) {
+      nextScene();
+    }
+  }, 1500);
+}
 
   function nextScene() {
     current++;
@@ -304,7 +368,18 @@
   }
   showScene();
 };
-</script>
+  function resizeGame() {
+  const container = document.getElementById("gameContainer");
+  const scaleX = window.innerWidth / 800;
+  const scaleY = window.innerHeight / 450;
+  const scale = Math.min(scaleX, scaleY);
 
+  container.style.transform = `scale(${scale})`;
+  container.style.transformOrigin = "top left";
+}
+window.addEventListener("resize", resizeGame);
+window.addEventListener("load", resizeGame);
+</script>
+<div id="quizMessage" class="quiz-message"></div>
 </body>
-</html>
+    </html>       
